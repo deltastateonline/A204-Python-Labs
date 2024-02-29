@@ -23,15 +23,17 @@ def main():
 
             container_client = serviceClient.get_container_client(containerName)
 
-            # container_client = serviceClient.create_container(containerName)
+            
             logging.info(f"Container Created {containerName}")
 
-            blobClient = serviceClient.get_blob_client(container=containerName, blob=f"phones{suffix1}.png" )
+            blobClient = serviceClient.get_blob_client(container=containerName, blob=f"backofhouse{suffix1}.jpg" )
+
+            #container_client.upload_blob() can upload blob from container client
 
             logging.info(f"Uploading File to {containerName}")
 
-            with open(file="data\\01-head1.png", mode="rb") as data:
-                blobClient.upload_blob(data , tags={"createdBy":"Python"}, overwrite=True)
+            with open(file="data\\backofhouse.jpg", mode="rb") as data:
+                blobClient.upload_blob(data , tags={"createdBy":"Python"}, overwrite=True, metadata={"Dept":"IT"})
 
 
         except AzureError as ex:

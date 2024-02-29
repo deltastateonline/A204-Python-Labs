@@ -9,29 +9,29 @@ import datetime
 load_dotenv()
 
 
-logging.basicConfig(level=logging.INFO)
+#logging.basicConfig(level=logging.INFO)
+#logging.getLogger(__name__).setLevel(logging.INFO)
+
 
 def main():
     print("Start Processing ")
-    suffix1 = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+    suffix = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
     suffix = ''
 
     with getServiceClient() as serviceClient :
         try:
             containerName = f"{os.getenv('BLOBCONTAINER')}{suffix}"
-            logging.info(f"Creating container -  {containerName}")
+            logging.info(f"Getting  container -  {containerName}")
 
-            container_client = serviceClient.get_container_client(containerName)
+            container_client = serviceClient.get_container_client(containerName)            
 
-            # container_client = serviceClient.create_container(containerName)
-            logging.info(f"Container Created {containerName}")
+            for x in container_client.list_blob_names():
+                downloadPath = f"data\\{x}"
+                with open(file= downloadPath , mode="wb") as df:
+                    df.write(container_client.download_blob(x).readall())
+                #blob_client.download_blob() 
 
-            blobClient = serviceClient.get_blob_client(container=containerName, blob=f"phones{suffix1}.png" )
 
-            logging.info(f"Uploading File to {containerName}")
-
-            with open(file="data\\01-head1.png", mode="rb") as data:
-                blobClient.upload_blob(data , tags={"createdBy":"Python"}, overwrite=True)
 
 
         except AzureError as ex:
