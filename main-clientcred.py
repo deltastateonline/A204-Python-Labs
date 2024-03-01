@@ -14,31 +14,29 @@ logging.basicConfig(level=logging.INFO)
 def main():
     print("Start Processing ")
     suffix1 = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
-    suffix = ''
+    suffix = '1'
     
     clientCreds : ClientSecretCredential = ClientSecretCredential(os.getenv("TENANTID"), 
                                                                   os.getenv("CLIENTID"),
                                                                   os.getenv("CLIENTSECRET"))
     
     print(os.getenv("BC"))
+    """
+    https://staiwclientapp001.blob.core.windows.net/movies/IMG_1834.JPG
+    https://staiwclientapp001.blob.core.windows.net/movies1/backofhouse20240301104833.jpg
+    """
 
     with getServiceClient(os.getenv("BLOBURL"), clientCreds) as serviceClient :
         try:
             containerName = f"{os.getenv('BC')}{suffix}"
-            logging.info(f"Creating container -  {containerName}")
+            logging.info(f"Creating container -  {containerName}")                   
 
-            container_client = serviceClient.get_container_client(containerName)
-
-            # container_client = serviceClient.create_container(containerName)
-            #logging.info(f"Container Created {containerName}")
-            
-
-            blobClient = serviceClient.get_blob_client(container=containerName, blob=f"phones{suffix1}.png" )
+            blobClient = serviceClient.get_blob_client(container=containerName, blob=f"backofhouse{suffix1}.jpg" )
 
             logging.info(f"Uploading File to {containerName}")
 
-            with open(file="data\\01-head1.png", mode="rb") as data:
-                blobClient.upload_blob(data , tags={"createdBy":"Python"}, overwrite=True)
+            with open(file="data\\backofhouse.jpg", mode="rb") as data:
+                blobClient.upload_blob(data , tags={"createdBy":"Python"}, overwrite=True, )
             
 
         except AzureError as ex:

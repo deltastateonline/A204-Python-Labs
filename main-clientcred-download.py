@@ -30,7 +30,12 @@ def main():
             container_client = serviceClient.get_container_client(containerName)
 
             for x in container_client.list_blob_names():
-                print(f"blobname : {x}")
+                downloadPath = f"movies\\{x}"
+                print(f"Downloading blobname : {x}")
+                with open(file= downloadPath , mode="wb") as df:
+                    df.write(container_client.download_blob(x).readall())
+                
+                
             
 
         except AzureError as ex:
